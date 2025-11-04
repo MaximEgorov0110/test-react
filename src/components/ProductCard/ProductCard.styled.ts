@@ -11,18 +11,30 @@ align-items: center;
 justify-content: space-between;
 padding: 25px;
 
-  & img {
+  img {
     height: 300px;
     width: 300px;
   }
 
-  & .footer {
+  .footer {
     width: 100%;
     display: flex;
     justify-content: space-between;
   }
 
-  & .like {
-    background-color: blue;
-  }
+  button {
+    color: gray;
+    border: 2px solid gray;
+    padding: 8px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.3s ease
+    }
+
+    .liked {
+      border: 2px solid red;
+      color: red;
+    }
+
 `

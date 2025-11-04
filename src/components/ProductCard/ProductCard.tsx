@@ -1,34 +1,32 @@
-import type { Product } from "../../types/product";
-import { ProductCardStyledContainer } from "./CroductCard.styled";
-import { useDispatch } from "react-redux";
-import { toggleProductLike } from "../../api";
+import type { Product } from '../../types/product';
+import { ProductCardStyledContainer } from './ProductCard.styled.ts';
 
 interface ProductCardProps {
-  product: Product
+  product: Product;
+  onLikeToggle: (productId: number, currentIsLiked: boolean) => void;
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
-
-  const dispatch = useDispatch()
-
-  const handleLike = () => {
-    console.log(`like ${product.id}`);
-  }
+export const ProductCard = ({ product, onLikeToggle }: ProductCardProps) => {
+  const handleLikeClick = () => {
+    onLikeToggle(product.id, product.isLiked);
+  };
 
   return (
     <ProductCardStyledContainer>
-      <img src={product.image} alt="" />
-      <h2>{product.title}</h2>
+      <h3>{product.title}</h3>
+      <img src={product.image} alt=""/>
       <p>{product.description}</p>
-      <div className="footer">
-        <p className="price">{product.price} руб</p>
-        {product.isLiked ? (
-          <button className="like" onClick={handleLike}>like</button>
-        ) : (
-          <button onClick={handleLike}>like</button>
-        )
-        }
+      <div className='footer'>
+        <p>Цена: {product.price} руб.</p>
+        <button
+          onClick={handleLikeClick}
+          className={product.isLiked ? 'liked' : ''}
+        >
+          {product.isLiked ? '❤️' : '🤍'} Лайк
+        </button>
       </div>
     </ProductCardStyledContainer>
-  )
-}
+  );
+};
+
+export default ProductCard;

@@ -12,6 +12,7 @@ export interface CreateProductData {
   description: string;
   price: number;
   image: string;
+  isLiked?: boolean;
 }
 
 export interface ProductsState {
