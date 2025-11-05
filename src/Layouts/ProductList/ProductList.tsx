@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, type ChangeEvent } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { fetchProducts, toggleLike, toggleFilter, clearError } from '../../store/productsSlice';
+import { fetchProducts, toggleLike, toggleFilter, clearError, removeProduct } from '../../store/productsSlice';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import { ProductListStyledContainer } from './ProductList..styled';
 
 export const ProductList = () => {
   const dispatch = useAppDispatch();
-  const { list, isLoading, showOnlyLiked, error} = useAppSelector((state) => state.products);
+  const { list, isLoading, showOnlyLiked, error } = useAppSelector((state) => state.products);
 
   useEffect(() => {
     dispatch(fetchProducts(showOnlyLiked));
@@ -19,6 +19,16 @@ export const ProductList = () => {
   const handleReturnToAllProducts = () => {
     dispatch(clearError());
     dispatch(toggleFilter());
+  };
+
+  const handleDeleteProduct = (productId: number) => {
+    dispatch(removeProduct({ id: productId }));
+  };
+
+  const [querySearch, setQuerySearch] = useState('')
+  const handleQuerySearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setQuerySearch(value)
   };
 
   if (isLoading) return <div>Загрузка товаров...</div>;
@@ -43,16 +53,22 @@ export const ProductList = () => {
         </button>
         <input type="text"
           placeholder="Поиск по названию товара..."
-          />
+          value={querySearch}
+          onChange={handleQuerySearch}
+        />
       </div>
 
       <div className="products-list">
         {list.length > 0 ? (
-          list.map(product => (
+          list.filter((product) => {
+            return product.title.includes(querySearch)
+          })
+          .map(product => (
             <ProductCard
               key={product.id}
               product={product}
               onLikeToggle={handleLikeToggle}
+              onDelete={handleDeleteProduct}
             />
           ))
         ) : (

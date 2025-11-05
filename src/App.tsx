@@ -1,3 +1,4 @@
+import { ProductForm } from './components/ProductForm/ProductForm';
 import { ProductDetails } from './Layouts/ProductDetails/ProductDetails'
 import { ProductList } from './Layouts/ProductList/ProductList'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -12,7 +13,8 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<ProductList />} />
-        <Route path='/product/:id' element={<ProductDetails/>}/>
+        <Route path='/product/:id' element={<ProductDetails/>} />
+        <Route path='/create' element={<ProductForm/>} />
       </Routes>
     </Router>
   )

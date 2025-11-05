@@ -5,11 +5,16 @@ import { ProductCardStyledContainer } from './ProductCard.styled.ts';
 interface ProductCardProps {
   product: Product;
   onLikeToggle: (productId: number, currentIsLiked: boolean) => void;
+  onDelete: (productId: number) => void;
 }
 
-export const ProductCard = ({ product, onLikeToggle }: ProductCardProps) => {
+export const ProductCard = ({ product, onLikeToggle, onDelete }: ProductCardProps) => {
   const handleLikeClick = () => {
     onLikeToggle(product.id, product.isLiked);
+  };
+
+  const handleDeleteClick = () => {
+    onDelete(product.id);
   };
 
   const navigate = useNavigate()
@@ -20,6 +25,7 @@ export const ProductCard = ({ product, onLikeToggle }: ProductCardProps) => {
 
   return (
     <ProductCardStyledContainer>
+      <button className='delete-btn' onClick={handleDeleteClick}>X</button>
       <h3 onClick={handleCardClick}>{product.title}</h3>
       <img src={product.image} alt=""/>
       <p>{product.description}</p>

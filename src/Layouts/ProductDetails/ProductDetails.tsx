@@ -40,7 +40,7 @@ export const ProductDetails = () => {
   };
 
   const handleBackClick = () => {
-    navigate(-1);
+    navigate('/');
   };
 
   if (loading) return <div>Загрузка товара...</div>;
@@ -53,7 +53,7 @@ export const ProductDetails = () => {
           className="back-btn"
           onClick={handleBackClick}
         >
-          Назад
+          На главную
         </button>
 
         <div className="product-wrapper">

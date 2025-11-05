@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getProducts, toggleProductLike, getLikedProducts } from '../api';
-import type { Product, ProductsState } from '../types/product';
+import { getProducts, toggleProductLike, getLikedProducts, deleteProductById, createProduct } from '../api';
+import type { CreateProductData, Product, ProductsState } from '../types/product';
 
 const initialState: ProductsState = {
   list: [],
@@ -21,6 +21,32 @@ export const fetchProducts = createAsyncThunk(
         if (showOnlyLiked && error.response?.status === 404) {
           return [];
         }
+        throw error;
+      });
+  }
+);
+
+export const removeProduct =  createAsyncThunk(
+  'products/deleteProduct',
+  ({id}: {id: number}) => {
+    return deleteProductById(id)
+      .then((data) => data)
+      .catch((error) => {
+        console.log(id)
+        alert('ошибка')
+        throw error;
+      });
+  }
+)
+
+export const createNewProduct = createAsyncThunk(
+  'products/createProduct',
+  (productData: CreateProductData) => {
+    return createProduct(productData)
+      .then((data) => data)
+      .catch((error) => {
+        console.log('Ошибка создания товара:', error);
+        alert('Ошибка при создании товара');
         throw error;
       });
   }
@@ -65,6 +91,19 @@ const productsSlice = createSlice({
       .addCase(toggleLike.fulfilled, (state, action) => {
         const index = state.list.findIndex(p => p.id === action.payload.id);
         if (index !== -1) state.list[index] = action.payload;
+      })
+      .addCase(removeProduct.fulfilled, (state, action) => {
+        state.list = state.list.filter(product => product.id !== action.payload.id);
+      })
+      .addCase(removeProduct.rejected, (state) => {
+        state.error = 'Ошибка при удалении товара';
+      })
+      .addCase(createNewProduct.fulfilled, (state, action) => {
+        // Добавляем новый товар в начало списка
+        state.list.unshift(action.payload);
+      })
+      .addCase(createNewProduct.rejected, (state) => {
+        state.error = 'Ошибка при создании товара';
       });
   },
 });

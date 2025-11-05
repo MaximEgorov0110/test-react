@@ -27,6 +27,10 @@ export const getProductById = (id: number): Promise<Product> => {
   return responseApi<Product, null>('get', `/products/${id}`);
 }
 
+export const deleteProductById = (id: number): Promise<Product> => {
+  return responseApi<Product, null>('delete', `/products/${id}`);
+}
+
 export const createProduct = (productData: CreateProductData): Promise<Product> => {
   return responseApi<Product, CreateProductData>('post', '/products', productData);
 }
