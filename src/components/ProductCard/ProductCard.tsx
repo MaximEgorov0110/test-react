@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import type { Product } from '../../types/product';
 import { ProductCardStyledContainer } from './ProductCard.styled.ts';
 
@@ -11,9 +12,15 @@ export const ProductCard = ({ product, onLikeToggle }: ProductCardProps) => {
     onLikeToggle(product.id, product.isLiked);
   };
 
+  const navigate = useNavigate()
+
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
     <ProductCardStyledContainer>
-      <h3>{product.title}</h3>
+      <h3 onClick={handleCardClick}>{product.title}</h3>
       <img src={product.image} alt=""/>
       <p>{product.description}</p>
       <div className='footer'>
@@ -22,7 +29,7 @@ export const ProductCard = ({ product, onLikeToggle }: ProductCardProps) => {
           onClick={handleLikeClick}
           className={product.isLiked ? 'liked' : ''}
         >
-          {product.isLiked ? '❤️' : '🤍'} Лайк
+          {product.isLiked ? 'Убрать из избранного' : 'Добавить в избранное'}
         </button>
       </div>
     </ProductCardStyledContainer>

@@ -1,47 +1,75 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { ProductsState, Product} from "../types/product"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getProducts, toggleProductLike, getLikedProducts } from '../api';
+import type { Product, ProductsState } from '../types/product';
 
-const initialState = {
+const initialState: ProductsState = {
   list: [],
   isLoading: false,
-  likedProductIds: [] as number[]
+  error: null,
+  showOnlyLiked: false,
 };
+
+// Получение товаров
+export const fetchProducts = createAsyncThunk(
+  'products/fetchProducts',
+  (showOnlyLiked: boolean) => {
+    const apiResponse = showOnlyLiked ? getLikedProducts() : getProducts();
+
+    return apiResponse
+      .then((data) => data)
+      .catch((error) => {
+        if (showOnlyLiked && error.response?.status === 404) {
+          return [];
+        }
+        throw error;
+      });
+  }
+);
+
+// Переключение лайка
+export const toggleLike = createAsyncThunk(
+  'products/toggleLike',
+  ({ id, currentIsLiked }: { id: number; currentIsLiked: boolean }) => {
+    return toggleProductLike(id, currentIsLiked)
+      .then((data) => data)
+      .catch((error) => {
+        throw error;
+      });
+  }
+);
 
 const productsSlice = createSlice({
   name: 'products',
-  initialState: initialState,
+  initialState,
   reducers: {
-    setProducts(state, action) {
-      state.list = action.payload;
+    toggleFilter: (state) => {
+      state.showOnlyLiked = !state.showOnlyLiked;
     },
-    setIsProductLoading(state, action) {
-      state.isLoading = action.payload;
+    clearError: (state) => {
+      state.error = null;
     },
-    toggleProductLike(state, action) {
-      const productId = action.payload;
-      const index = state.likedProductIds.indexOf(productId);
-
-      if (index === -1) {
-        state.likedProductIds.push(productId);
-      } else {
-        state.likedProductIds.splice(index, 1);
-      }
-
-      // const product: Product = state.list.find(item => item.id === productId);
-      // if (product) {
-      //   product.isLiked = !product.isLiked;
-      // }
-    },
-  }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.list = action.payload;
+      })
+      .addCase(fetchProducts.rejected, (state) => {
+        state.isLoading = false;
+        state.error = 'Ошибка загрузки';
+      })
+      .addCase(toggleLike.fulfilled, (state, action) => {
+        const index = state.list.findIndex(p => p.id === action.payload.id);
+        if (index !== -1) state.list[index] = action.payload;
+      });
+  },
 });
 
-// Селекторы
-export const getProductsList = (state:  { products: ProductsState }) => state.products.list;
-export const getIsLoading = (state:  { products: ProductsState }) => state.products.isLoading;
-export const getLikedProductIds = (state: { products: ProductsState }) => state.products.likedProductIds;
-
-// Экспорт действий
-export const { setProducts, setIsProductLoading } = productsSlice.actions;
+export const { toggleFilter, clearError } = productsSlice.actions;
 
 // Экспорт редюсера
 export default productsSlice.reducer;

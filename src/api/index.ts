@@ -1,35 +1,38 @@
-import axios from "axios";
-import type { AxiosResponse } from "axios"
 import type { Product, CreateProductData } from "../types/product";
+import axios from "axios";
 
 const API = 'https://68236bac65ba05803396af5f.mockapi.io'
 
-export const responseApi = async<ResponseData, Payload>(
-  method: 'get' | 'post' | 'put' | 'delete' | 'patch',
-  url: string,
+export const responseApi = <ResponseData, Payload>(
+  method: 'get' | 'post' | 'put' | 'delete', 
+  url: string, 
   payload?: {}
 ): Promise<ResponseData> => {
-  const response = await (axios[method](API + url, payload) as Promise<AxiosResponse<ResponseData, Payload, {}>>)
-  return response.data
-}
-export const getProducts = () => {
-  return responseApi<Product[], null>('get', '/products')
-}
-
-export const getLikedProducts = () => {
-  return responseApi<Product[], null>('get', '/products?isLiked=true')
+  return axios[method](API + url, payload)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
 }
 
-export const getProductById = (id: number) => {
+export const getProducts = (): Promise<Product[]> => {
+  return responseApi<Product[], null>('get', '/products');
+}
+
+export const getLikedProducts = (): Promise<Product[]> => {
+  return responseApi<Product[], null>('get', '/products?isLiked=true');
+}
+
+export const getProductById = (id: number): Promise<Product> => {
   return responseApi<Product, null>('get', `/products/${id}`);
 }
 
-export const createProduct = (productData: CreateProductData) => {
-  return responseApi<Product, CreateProductData>('post', '/products', productData)
+export const createProduct = (productData: CreateProductData): Promise<Product> => {
+  return responseApi<Product, CreateProductData>('post', '/products', productData);
 }
 
-export const toggleProductLike = (id: number, isLiked: boolean) => {
-  return responseApi<Product, { isLiked: boolean }>('put', `/products/${id}`, {
-    isLiked: !isLiked
+export const toggleProductLike = (id: number, isLiked: boolean): Promise<Product> => {
+  return responseApi<Product, { isLiked: boolean }>('put', `/products/${id}`, { 
+    isLiked: !isLiked 
   });
 }

@@ -1,17 +1,20 @@
-import './App.css'
+import { ProductDetails } from './Layouts/ProductDetails/ProductDetails'
 import { ProductList } from './Layouts/ProductList/ProductList'
-import { Provider } from 'react-redux'
-import store from './store'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// import { Provider } from 'react-redux'
+// import store from './store'
 // import { getProducts } from './api'
 
 function App() {
   // getProducts()
-  
+
   return (
-    <Provider store={store}>
-      <ProductList>
-      </ProductList>
-    </Provider>
+    <Router>
+      <Routes>
+        <Route path='/' element={<ProductList />} />
+        <Route path='/product/:id' element={<ProductDetails/>}/>
+      </Routes>
+    </Router>
   )
 }
 

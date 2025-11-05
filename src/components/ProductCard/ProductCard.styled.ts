@@ -10,6 +10,11 @@ flex-direction: column;
 align-items: center;
 justify-content: space-between;
 padding: 25px;
+border-radius: 20px;
+
+  h3 {
+  cursor: pointer;
+  }
 
   img {
     height: 300px;
@@ -25,11 +30,13 @@ padding: 25px;
   button {
     color: gray;
     border: 2px solid gray;
-    padding: 8px 16px;
+    padding: 4px 16px;
     border-radius: 30px;
     cursor: pointer;
     background: white;
-    transition: all 0.3s ease
+    transition: all 0.3s ease;
+    width: 150px;
+    height: 40px;
     }
 
     .liked {

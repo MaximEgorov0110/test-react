@@ -1,87 +1,33 @@
-import { useState, useEffect } from 'react';
-import { getProducts, toggleProductLike, getLikedProducts } from '../../api/index';
-import type { Product } from '../../types/product';
+import { useEffect, useState } from 'react';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { fetchProducts, toggleLike, toggleFilter, clearError } from '../../store/productsSlice';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import { ProductListStyledContainer } from './ProductList..styled';
 
 export const ProductList = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [showOnlyLiked, setShowOnlyLiked] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Загрузка товаров
-  const loadProducts = () => {
-    setLoading(true);
-    setError(null);
-
-    const apiCall = showOnlyLiked ? getLikedProducts() : getProducts();
-
-    apiCall
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((error) => {
-        console.error('Error loading products:', error);
-        if (showOnlyLiked && error.response?.status === 404) {
-          setProducts([]);
-        } else {
-          setError('Ошибка при загрузке товаров');
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  const dispatch = useAppDispatch();
+  const { list, isLoading, showOnlyLiked, error} = useAppSelector((state) => state.products);
 
   useEffect(() => {
-    loadProducts();
-  }, [showOnlyLiked]);
+    dispatch(fetchProducts(showOnlyLiked));
+  }, [dispatch, showOnlyLiked]);
 
-  // Обработчик лайка
   const handleLikeToggle = (productId: number, currentIsLiked: boolean) => {
-    // Оптимистичное обновление
-    setProducts(prev => prev.map(product =>
-      product.id === productId
-        ? { ...product, isLiked: !currentIsLiked }
-        : product
-    ));
-
-    toggleProductLike(productId, currentIsLiked)
-      .then(() => {
-        // Если показываем только лайкнутые и убрали лайк - перезагружаем
-        if (showOnlyLiked && currentIsLiked) {
-          loadProducts();
-        }
-      })
-      .catch((error) => {
-        console.error('Error toggling like:', error);
-        // Откатываем изменения в случае ошибки
-        setProducts(prev => prev.map(product =>
-          product.id === productId
-            ? { ...product, isLiked: currentIsLiked }
-            : product
-        ));
-      });
+    dispatch(toggleLike({ id: productId, currentIsLiked }));
   };
 
-  // Сброс ошибки и возврат ко всем товарам
   const handleReturnToAllProducts = () => {
-    setError(null);
-    setShowOnlyLiked(false);
+    dispatch(clearError());
+    dispatch(toggleFilter());
   };
 
-  if (loading) {
-    return <div>Загрузка товаров...</div>;
-  }
+  if (isLoading) return <div>Загрузка товаров...</div>;
 
   if (error) {
     return (
-      <div>
-        <div>{error}</div>
-        <button
-          onClick={handleReturnToAllProducts}
-        >
+      <div style={{ textAlign: 'center', padding: '40px' }}>
+        <div style={{ color: 'red', marginBottom: '20px' }}>{error}</div>
+        <button onClick={handleReturnToAllProducts}>
           Вернуться к списку товаров
         </button>
       </div>
@@ -91,20 +37,18 @@ export const ProductList = () => {
   return (
     <ProductListStyledContainer>
       <div className='filter'>
-        <button className='filter-button'
-          onClick={() => setShowOnlyLiked(!showOnlyLiked)}
-        >
-          {showOnlyLiked ? 'Показать все товары' : 'Показать только понравившиеся'}
+        <span>Найдено товаров: {list.length}</span>
+        <button className='filter-button' onClick={() => dispatch(toggleFilter())}>
+          {showOnlyLiked ? 'Показать все товары' : 'Показать избранное'}
         </button>
-
-        <span>
-          Найдено товаров: {products.length}
-        </span>
+        <input type="text"
+          placeholder="Поиск по названию товара..."
+          />
       </div>
 
       <div className="products-list">
-        {products.length > 0 ? (
-          products.map(product => (
+        {list.length > 0 ? (
+          list.map(product => (
             <ProductCard
               key={product.id}
               product={product}
@@ -112,15 +56,9 @@ export const ProductList = () => {
             />
           ))
         ) : (
-          showOnlyLiked ? (
-            <div className="no-products-message">
-              Нет понравившихся товаров
-            </div>
-          ) : (
-            <div className="no-products-message">
-              Товары не найдены
-            </div>
-          )
+          <div className="no-products-message">
+            {showOnlyLiked ? 'Нет понравившихся товаров' : 'Товары не найдены'}
+          </div>
         )}
       </div>
     </ProductListStyledContainer>

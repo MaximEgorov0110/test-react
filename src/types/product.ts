@@ -18,5 +18,6 @@ export interface CreateProductData {
 export interface ProductsState {
   list: Product[];
   isLoading: boolean;
-  likedProductIds: number[];
+  showOnlyLiked: boolean;
+  error: string | null;
 }
