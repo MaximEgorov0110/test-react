@@ -160,7 +160,7 @@ padding: 10px 30px;
       cursor: pointer;
     }
 }
-`,hg=()=>{const l=Ju(),u=Nn(),r=()=>{u.pathname==="/"?l("/create"):l("/")};return k.jsx(x_,{children:k.jsxs("div",{className:"header container",children:[k.jsx("div",{className:"logo",children:"LOGO"}),k.jsx("button",{className:"header-btn",onClick:r,children:u.pathname==="/main"?"Создать товар":"На главную"})]})})},z_=Ua.div`
+`,hg=()=>{const l=Ju(),u=Nn(),r=()=>{u.pathname==="/main"?l("/create"):l("/main")};return k.jsx(x_,{children:k.jsxs("div",{className:"header container",children:[k.jsx("div",{className:"logo",children:"LOGO"}),k.jsx("button",{className:"header-btn",onClick:r,children:u.pathname==="/main"?"Создать товар":"На главную"})]})})},z_=Ua.div`
 display: flex;
 height: 650px;
 width: 350px;
