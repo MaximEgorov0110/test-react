@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import type { Product } from '../../types/product';
 import { ProductCardStyledContainer } from './ProductCard.styled.ts';
 
@@ -17,18 +17,14 @@ export const ProductCard = ({ product, onLikeToggle, onDelete }: ProductCardProp
     onDelete(product.id);
   };
 
-  const navigate = useNavigate()
-
-  const handleCardClick = () => {
-    navigate(`/product/${product.id}`);
-  };
-
   return (
     <ProductCardStyledContainer>
       <button className='delete-btn' onClick={handleDeleteClick}>X</button>
-      <h3 onClick={handleCardClick}>{product.title}</h3>
-      <img src={product.image} alt=""/>
-      <p>{product.description}</p>
+      <Link className='link-product' to={`/product/${product.id}`}>
+        <h3>{product.title}</h3>
+        <img src={product.image} alt="" />
+        <p className='description'>{product.description}</p>
+      </Link>
       <div className='footer'>
         <p>Цена: {product.price} руб.</p>
         <button

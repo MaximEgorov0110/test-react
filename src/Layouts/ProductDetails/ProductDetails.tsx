@@ -39,25 +39,18 @@ export const ProductDetails = () => {
     }
   };
 
-  const handleBackClick = () => {
-    navigate('/');
-  };
-
   if (loading) return <div>Загрузка товара...</div>;
   if (!product) return <div>Товар не найден</div>;
 
   return (
     <ProductDepailsStyledContainer>
       <div>
-        <button
-          className="back-btn"
-          onClick={handleBackClick}
-        >
-          На главную
-        </button>
-
         <div className="product-wrapper">
           <h1>{product.title}</h1>
+
+          <img src={product.image} alt="" />
+
+          <p>{product.description}</p>
 
           <div className="footer">
             <p className="product-price">

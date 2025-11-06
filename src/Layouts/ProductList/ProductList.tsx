@@ -27,7 +27,7 @@ export const ProductList = () => {
 
   const [querySearch, setQuerySearch] = useState('')
   const handleQuerySearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
+    const value = event.target.value.toLowerCase()
     setQuerySearch(value)
   };
 
@@ -46,11 +46,11 @@ export const ProductList = () => {
 
   return (
     <ProductListStyledContainer>
-      <div className='filter'>
-        <span>Найдено товаров: {list.length}</span>
+      <div className='filter container'>
         <button className='filter-button' onClick={() => dispatch(toggleFilter())}>
           {showOnlyLiked ? 'Показать все товары' : 'Показать избранное'}
         </button>
+        <span>Найдено товаров: {list.length}</span>
         <input type="text"
           placeholder="Поиск по названию товара..."
           value={querySearch}
@@ -58,10 +58,10 @@ export const ProductList = () => {
         />
       </div>
 
-      <div className="products-list">
+      <div className="products-list container">
         {list.length > 0 ? (
           list.filter((product) => {
-            return product.title.includes(querySearch)
+            return product.title.toLowerCase().includes(querySearch)
           })
           .map(product => (
             <ProductCard

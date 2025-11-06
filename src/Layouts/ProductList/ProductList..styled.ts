@@ -3,8 +3,6 @@ import styled from 'styled-components';
 export const ProductListStyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 1920px;
-  margin: 0 auto;
   align-items: center;
 
   .products-list {
@@ -19,9 +17,8 @@ export const ProductListStyledContainer = styled.div`
 
   .filter {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 100px;
     margin-bottom: 20px;
 
     & button, input {

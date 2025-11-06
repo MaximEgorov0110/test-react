@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const ProductCardStyledContainer = styled.div`
-box-sizing: border-box;
 display: flex;
 height: 650px;
 width: 350px;
@@ -14,6 +13,13 @@ border-radius: 20px;
 
   h3 {
   cursor: pointer;
+  }
+
+  .description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   }
 
   img {
@@ -43,5 +49,20 @@ border-radius: 20px;
       border: 2px solid red;
       color: red;
     }
+
+    .link-product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+    text-decoration: none;
+    }
+
+    .delete-btn {
+    width: 40px;
+    margin-left: auto;
+    }
+
+
 
 `

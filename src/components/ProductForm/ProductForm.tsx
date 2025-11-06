@@ -3,6 +3,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { createNewProduct } from '../../store/productsSlice';
 import type { CreateProductData } from '../../types/product';
 import { useNavigate } from 'react-router-dom';
+import { ProductFormStyledContainer } from './ProductFormStyled';
 
 export const ProductForm = () => {
   const dispatch = useAppDispatch();
@@ -22,7 +23,7 @@ export const ProductForm = () => {
 
     dispatch(createNewProduct(formData))
       .then(() => {
-        navigate('/');
+        navigate('/main');
       })
       .catch(() => {
         setLoading(false);
@@ -38,27 +39,15 @@ export const ProductForm = () => {
   };
 
   const handleBack = () => {
-    navigate('/');
+    navigate('/main');
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <button
-        onClick={handleBack}
-
-      >
-        На главную
-      </button>
-
+    <ProductFormStyledContainer className='container'>
       <h1>Создание нового товара</h1>
 
-      <form onSubmit={handleSubmit} style={{
-        border: '1px solid #ddd',
-        padding: '30px',
-        borderRadius: '8px',
-        backgroundColor: '#f9f9f9'
-      }}>
-        <div style={{ marginBottom: '20px' }}>
+      <form onSubmit={handleSubmit}>
+        <div className='input-container'>
           <label>
             Название товара *
           </label>
@@ -73,7 +62,7 @@ export const ProductForm = () => {
           />
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
+        <div className='input-container'>
           <label>
             Цена *
           </label>
@@ -90,8 +79,8 @@ export const ProductForm = () => {
           />
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+        <div className='input-container'>
+          <label>
             Описание
           </label>
           <textarea
@@ -103,12 +92,12 @@ export const ProductForm = () => {
           />
         </div>
 
-        <div style={{ display: 'flex', gap: '15px' }}>
+        <div className='btn-container'>
           <button
             type="submit"
             disabled={loading}
             style={{
-              backgroundColor: loading ? '#6c757d' : '#28a745',
+              backgroundColor: loading ? 'gray' : 'green',
             }}
           >
             {loading ? 'Создание...' : 'Создать товар'}
@@ -126,7 +115,7 @@ export const ProductForm = () => {
           </button>
         </div>
       </form>
-    </div>
+    </ProductFormStyledContainer>
   );
 };
 
