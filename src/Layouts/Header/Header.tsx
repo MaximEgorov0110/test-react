@@ -6,10 +6,10 @@ export const Header = () => {
   const location = useLocation();
 
   const handleButtonClick = () => {
-    if (location.pathname === '/') {
+    if (location.pathname === '/main') {
       navigate('/create');
     } else {
-      navigate('/');
+      navigate('/main');
     }
   };
 
